@@ -1,0 +1,50 @@
+<% content_for :stylesheets do %>
+    <style>
+        .login-form {
+            width: 340px;
+            margin: 50px auto;
+            font-size: 15px;
+		}
+		
+    </style>
+<% end %>
+
+<% content_for :content do %>
+    <div class="col-md-6 col-md-offset-3 well my-auto">
+		<h2 class="text-center">Log in</h2>   
+		<div class="col">
+			<% flash.each do |type, message| %>
+				<div class="alert alert-<%= type %> alert-dismissible" id="alert-1">
+					<a href="#" class="close">&times;</a>
+					<%= message %>
+				</div>
+			<% end %>
+		</div>
+
+		<%= form_tag '/login', :class => 'login-form ' do%>
+			<div class="form-group">
+				<%= label_tag :email %>
+				<%= text_field_tag :email, nil, class:'form-control' %>
+			</div>
+			<div class="form-group">
+				<%= label_tag :password %>
+				<%= password_field_tag :password, nil, class:'form-control' %>
+			</div>
+			<%= submit_tag 'Log in', class:'btn btn-block btn-success' %>
+		<% end %>
+	</div>
+<% end %>
+<% content_for :scripts do %>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			console.log('boteel');
+			$(".close").click(function(){
+				$("#alert-1").alert("close");
+			});
+			setTimeout(() => {
+				$(".alert").alert("close");
+			}, 3000);
+		});
+    </script>
+<% end %>
+<%= render template: "layouts/application" %>

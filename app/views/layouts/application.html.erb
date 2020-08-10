@@ -3,17 +3,17 @@
   <head>
     <title>Privy Pretest</title>
     <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= yield :stylesheets %>
   </head>
 
   <body class="text-center">
-    <header id="header">
-      <%= yield(:header) %>
-    </header>
-    <div id="content">
-      <%= content_for?(:content) ? yield(:content) : yield %>
+    <%= yield(:header) %>
+    <div class="container-fluid">
+      <%= yield(:content) %>
     </div>
     <%= yield :scripts %>
     <footer>

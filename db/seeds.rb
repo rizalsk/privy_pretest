@@ -1,5 +1,10 @@
 User.destroy_all
 User.create([{
+    username: "admin",
+    email: 'admin@example.com',
+    password_digest: BCrypt::Password.create('password')
+},
+{
     username: "john",
     email: 'john@example.com',
     password_digest: BCrypt::Password.create('password')

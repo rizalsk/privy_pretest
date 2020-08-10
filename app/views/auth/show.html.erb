@@ -1,0 +1,23 @@
+<% content_for :header do %>
+    <% render 'layouts/navbar' %> 
+<% end %>
+
+<% content_for :content do %>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1>Profile</h1>
+            <table class="table">
+                <tr>
+                    <th>Username</th>
+                    <td><%= current_user.username %></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><%= current_user.email %></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+<% end %>
+
+<%= render template: "layouts/application" %>

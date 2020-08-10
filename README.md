@@ -16,15 +16,26 @@ Run cmd : bundle install
 **note : change mysql password in config/database.yml if needed**
 
 Run cmd :
-    - rails db:create or rake db:create
-    - rails db:migrate
-    - rails db:seed
+
+1. create database:
+```sh
+$ rails db:create or rake db:create
+```
+2. migrate
+```sh
+$ rails db:migrate
+```
+3. migrate
+```sh
+$ rails db:seed
+```
 
 
 ### 3.1 Db seed users for login
 
 | Username | Email | Password |
 | ------ | ------ | ------ |
+| admin | admin@example.com | password |
 | john | john@example.com | password |
 | robert | robert@example.com | password |
 | tina | tina@example.com | password |
