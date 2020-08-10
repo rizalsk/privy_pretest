@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PrivyPretest</title>
+    <title>Privy Pretest</title>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= yield :stylesheets %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="text-center">
+    <header id="header">
+      <%= yield(:header) %>
+    </header>
+    <div id="content">
+      <%= content_for?(:content) ? yield(:content) : yield %>
+    </div>
+    <%= yield :scripts %>
+    <footer>
+      <%= yield :footer %>
+    </footer>
   </body>
 </html>
