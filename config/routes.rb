@@ -4,9 +4,11 @@ Rails.application.routes.draw do
 	delete 'logout', to: 'auth#destroy'
 	get 'profile', to: 'auth#show'
 
-	resources :banks
+	get 'banks', to: 'pages#banks'
+	get 'users', to: 'pages#users'
     namespace 'api' do
       	resources :banks
+      	resources :users
     end
 
 	get 'pages/index'

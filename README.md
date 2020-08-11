@@ -8,6 +8,8 @@
     - Git Bash 
     - Ruby version: 2.3.3 (i386-mingw32)
 
+
+> note : Open directory and open Git Bash or CMD or Terminal
 ### 2. Update bundle
 
 Run cmd : bundle install
@@ -39,3 +41,10 @@ $ rails db:seed
 | john | john@example.com | password |
 | robert | robert@example.com | password |
 | tina | tina@example.com | password |
+
+### 3.1 Run Rails Server
+> note : -p:3001 (Port = 3001), Url : 127.0.0.1:3001
+
+```sh
+$ rails s -p 3001
+```
