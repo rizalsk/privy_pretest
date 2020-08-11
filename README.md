@@ -25,13 +25,13 @@ $ rails db:create or rake db:create
 ```sh
 $ rails db:migrate
 ```
-3. migrate
+3. seeder
 ```sh
 $ rails db:seed
 ```
 
 
-### 3.1 Db seed users for login
+### 3.1 Database seeder users for login
 
 | Username | Email | Password |
 | ------ | ------ | ------ |

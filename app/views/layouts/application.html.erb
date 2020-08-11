@@ -8,16 +8,30 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= yield :stylesheets %>
+    <script type="text/javascript">
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+    </script>
   </head>
 
-  <body class="text-center">
+  <body class="">
+    <div id="loader">
+    </div>
+
     <%= yield(:header) %>
-    <div class="container-fluid">
+
+    
+    <div class="container-fluid" style="padding-bottom: 50px;">
       <%= yield(:content) %>
     </div>
     <%= yield :scripts %>
     <footer>
       <%= yield :footer %>
     </footer>
+    <%= yield(:modal) %>
+
   </body>
 </html>

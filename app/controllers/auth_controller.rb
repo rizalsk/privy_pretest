@@ -8,7 +8,13 @@ class AuthController < ApplicationController
     @user = User.find_by( email: params['email'])
     if @user && @user.authenticate(params['password'])
       session[:user_id] = @user.id
+      # session[:user_agent] = {
+      #   'user_agent' => request.user_agent,
+      #   'ip' => request.remote_ip,
+      #   'location' => request.location.city
+      # }
       flash[:success] = "Welcome #{@user.username}"
+       
       redirect_to root_path
     else
       flash.now[:danger] = "Your email or password doesn't correct"

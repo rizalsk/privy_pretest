@@ -10,6 +10,6 @@ class ApplicationController < ActionController::Base
     current_user
   end
   def authorized
-    redirect_to '/login' unless logged_in?
- end
+    redirect_to login_path unless logged_in?
+  end
 end

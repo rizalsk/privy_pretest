@@ -4,11 +4,12 @@
 <% end %>
 
 <% content_for :content do %>
-    <div class="jumbotron">
+    <div class="jumbotron text-center">
         <% flash.each do |type, message| %>
             <div class="alert alert-<%= type %>"><%= message %></div>
         <% end %>
         <h1>Welcome <%= current_user.username %></h1>
+
     </div>
 <% end %>
 

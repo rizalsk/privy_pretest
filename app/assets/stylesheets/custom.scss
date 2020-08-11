@@ -1,4 +1,7 @@
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css");
+@import "bootstrap-sprockets";
 @import "bootstrap";
+@import "bootstrap/theme";
 
 .form-signin {
     width: 100%;
@@ -9,4 +12,56 @@
 
 .h-100{
     height: 100%;
+}
+
+.modal-dialog{
+    left: 0;
+}
+
+#loader {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999999;
+	background: url( image_path('loader.gif') ) 50% 50% no-repeat #d4d4dae0;
+	display: none;
+	background-size: 10%;
+}
+
+.m-0{
+	margin : 0!important;
+}
+.p-0{
+	padding:0!important;
+}
+
+.modal {
+	position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    display: none;
+    overflow: auto;
+    overflow-y: scroll;
+}
+
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex!important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-backdrop {
+    z-index:400;
+    display:flex;
+}
+
+.d-none {
+    display:none!important;
 }
