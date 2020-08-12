@@ -1,14 +1,13 @@
-class Api::UserBalanceController < ApplicationController
+class Api::BankBalanceController < ApplicationController
 	skip_before_action :authorized
     # remove random token
     skip_before_action :verify_authenticity_token, only: [:index, :create, :update, :destroy]
 
   	def index
         @userbalance = UserBalance.select("*, DATE_FORMAT(created_at, '%Y-%m-%d %T') as transaction_date").where( user_id: session[:user_id] ).order('created_at ASC')
+        # data = @userbalance.to_json(:include => [:user => { :only => :username }, :history => { :only => [:type, :activity, :ip] }] );
         data = @userbalance.to_json(:include => [ :user, :history ]);
-        highestbalance = UserBalance.where( user_id: session[:user_id] ).order('balance_achieve DESC').first
-        balance_achieve = highestbalance ? highestbalance.balance_achieve.to_f : 0;
-        render :json => {status:'SUCCESS', message:'Loaded User Balance', data: data, balance_achieve:balance_achieve}, status:200
+        render :json => {status:'SUCCESS', message:'Loaded User Balance', data: data}, status:200
     end 
 
     def show
@@ -29,14 +28,13 @@ class Api::UserBalanceController < ApplicationController
         lasthistory = UserBalanceHistory.joins(:balance).where(:user_balances => {:user_id => user_id }).order('created_at DESC').first
         achievehistory = UserBalanceHistory.joins(:balance).where(:user_balances => {:user_id => user_id }).order('balance_achieve DESC').first
 
-        history_balance_before = ( lasthistory ? lasthistory.balance_after : 0 )
+        history_balance_before = ( lasthistory ? lasthistory.balance_before : 0 )
         # history_balance_after = ( lasthistory ? lasthistory.balance_before : 0 )
         
         lastbalance = UserBalance.where(:user_id => user_id ).order('created_at DESC').first
-        highestbalance = UserBalance.where(:user_id => user_id ).order('balance_achieve DESC').first
 
         balance = lastbalance ? ( activity == 'topup' ? params[:balance].to_f + lastbalance.balance.to_f : lastbalance.balance.to_f - params[:balance].to_f ) : params[:balance]
-        balance_achieve = highestbalance ? ( highestbalance.balance.to_f > balance.to_f ? highestbalance.balance.to_f : balance.to_f ) : params[:balance].to_f
+        balance_achieve = lastbalance ? ( lastbalance.balance.to_f > balance.to_f ? lastbalance.balance.to_f : balance.to_f ) : params[:balance].to_f
 
         @storebalance = {
         	"user_id" => user_id,
@@ -61,7 +59,7 @@ class Api::UserBalanceController < ApplicationController
         # abort @storehistory.inspect
 
         if(data.save)
-            render json:{status:'SUCCESS', message:'User Balance Saved', data:data, balance_achieve:balance_achieve}, status:200
+            render json:{status:'SUCCESS', message:'User Balance Saved', data:data}, status:200
         else 
             render json:{status:'Failed', message:'User Balance not saved', data:data.errors}, status:422
         end

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       	resources :banks
       	resources :users
       	resources :user_balance
+      	resources :bank_balance
     end
 
 	get 'pages/index'

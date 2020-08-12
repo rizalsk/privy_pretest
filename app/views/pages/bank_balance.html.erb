@@ -82,6 +82,8 @@
                     <th>Author</th>
                     <th>Balance</th>
                     <th>Balance Achieve</th>
+                    <th>Balance Before</th>
+                    <th>Balance After</th>
                 </tr>
             </thead>
             <tbody>
@@ -218,6 +220,7 @@
         dttable = $('#datatable').DataTable({
             responsive: true,
             "scrollY": "45vh",
+            "scrollX": "100%",
             "scrollCollapse": true,
             "ajax": {
                 "url": "api/user_balance",
@@ -257,6 +260,8 @@
                 { "data": "author" },
                 { "data": "balance" },
                 { "data": "balance_achieve" },
+                { "data": "balance_before" },
+                { "data": "balance_after" },
             ]
         });
     });
