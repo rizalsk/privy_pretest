@@ -219,10 +219,10 @@
 			    "url": "api/users",
 			    "dataSrc": function ( json ) {
 			        for ( var i=0, ien=json.data.length ; i<ien ; i++ ) {
-			        	var id_bank = json.data[i].id; 
+			        	var _id = json.data[i].id; 
 			            action = `
-			            	<button class="btn btn-sm btn-warning" data-id="`+id_bank+`" data-url="/api/users/`+id_bank+`" onclick="editData(this)">Edit</button>
-			            	<button class="btn btn-sm btn-danger" data-id="`+id_bank+`" data-url="/api/users/`+id_bank+`" onclick="deleteData(this)">Delete</button>
+			            	<button class="btn btn-sm btn-warning" data-id="`+_id+`" data-url="/api/users/`+_id+`" onclick="editData(this)">Edit</button>
+			            	<button class="btn btn-sm btn-danger" data-id="`+_id+`" data-url="/api/users/`+_id+`" onclick="deleteData(this)">Delete</button>
 			            `;
 
 			            json.data[i].action = action;

@@ -25,8 +25,9 @@ gem 'coffee-rails', '~> 4.2'
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'jquery-rails'
 gem 'jquery-datatables-rails', '~> 3.4.0'
-
-gem 'geocoder'
+gem "browser", require: "browser/browser"
+gem "useragent"
+gem "geocoder"
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'

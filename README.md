@@ -48,3 +48,5 @@ $ rails db:seed
 ```sh
 $ rails s -p 3001
 ```
+
+**Note : Don't forget to migrate and seed your database everytime**

@@ -10,17 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200810180056) do
+ActiveRecord::Schema.define(version: 20200812071306) do
 
-  create_table "banks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "name"
-    t.integer "code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "user_balance_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "user_balance_id"
+  create_table "balance_bank_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "balance_bank_id"
     t.integer "balance_before"
     t.integer "balance_after"
     t.string "activity"
@@ -31,6 +24,36 @@ ActiveRecord::Schema.define(version: 20200810180056) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type", limit: 6, default: "credit"
+  end
+
+  create_table "balance_banks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "balance"
+    t.integer "balance_achieve"
+    t.string "code"
+    t.boolean "enable", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "banks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "name"
+    t.integer "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_balance_histories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "user_balance_id"
+    t.string "type", limit: 6, default: "credit"
+    t.integer "balance_before"
+    t.integer "balance_after"
+    t.string "activity"
+    t.string "ip"
+    t.string "location"
+    t.string "user_agent"
+    t.string "author"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_balances", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

@@ -7,4 +7,7 @@ class PagesController < ApplicationController
 	def users
 		render 'pages/users'
 	end
+	def user_balance
+		render 'pages/user_balance'
+	end
 end

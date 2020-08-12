@@ -1,0 +1,265 @@
+<% content_for :header do %>
+    <% render 'layouts/navbar' %> 
+<% end %>
+<% content_for :modal do %>
+    <!-- Modal -->
+    <div id="transaction-modal" class="modal fade" data-backdrop="true" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> 
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center"  id="transaction-title">Transaction</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="transaction-form" onsubmit="event.preventDefault(); newData()">
+                        <div class="form-group d-none">
+                            <%= label_tag :user_id %>
+                            <%= text_field_tag :user_id, nil, class:'form-control', required: true, value: @current_user.id  %>
+                        </div>
+                        <div class="form-group">
+                            <%= label_tag :username %>
+                            <%= text_field_tag :username, nil, class:'form-control', required: true, disabled: true, value: @current_user.username %>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <%= label_tag :activity %>
+                                    <%= text_field_tag :activity, nil, class:'form-control', required: true, readonly: true, value: 'topup', id: 'topup-field' %>
+                                    <%= text_field_tag :activity, nil, class:'form-control', required: true, readonly: true, value: 'transfer', id: 'transfer-field' %>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <%= label_tag :type %>
+                                    <%= select_tag(:type, raw('<option value="credit">Credit</option><option value="debit">Debit</option>'), class: 'form-control') %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <%= label_tag :balance %>
+                                    <%= number_field_tag :balance, nil, class:'form-control', required: true  %>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <%= label_tag :balance_achieve %>
+                                    <%= number_field_tag :balance_achieve, nil, class:'form-control', required: true, readonly: true, value: 0  %>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-default btn-block">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<% end %>
+
+<% content_for :content do %>
+   <div class="container">
+        <div class="well">
+            <h1 class="m-0 p-0">USER BALANCE LIST</h1>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <button class="btn btn-success btn-sm" onclick="reload()">Reload Table</button>
+                    <button class="btn btn-primary btn-sm" onclick="topup()">Top up</button>
+                    <button class="btn btn-primary btn-sm" onclick="transfer()">Transfer</button>
+                </div>
+            </div>
+        </div> 
+        
+
+        <table id="datatable" class="table table-striped table-bordered border" style="width:100%" >
+            <thead>
+                <tr>
+                    <th width="70">Date</th>
+                    <th>Username</th>
+                    <th>Type</th>
+                    <th>Activity</th>
+                    <th>IP Addr</th>
+                    <th>Location</th>
+                    <th>User Agent</th>
+                    <th>Author</th>
+                    <th>Balance</th>
+                    <th>Balance Achieve</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+   </div> 
+<% end %>
+
+<% content_for :scripts do %>
+<script type="text/javascript">
+    var dttable = null;
+    var _data = null;
+
+    function topup(){
+        $("#transaction-title").text('TOPUP');
+        $("#topup-field").prop('disabled', false).show();
+        $("#transfer-field").prop('disabled', true).hide();
+        $('#transaction-modal').modal('show');
+
+        return false;
+    }
+
+    function transfer(){
+        $("#transaction-title").text('TRANSFER');
+        $("#transfer-field").prop('disabled', false).show();
+        $("#topup-field").prop('disabled', true).hide();
+        $('#transaction-modal').modal('show');
+
+        return false;
+    }
+
+    function newData(){
+        var data = $('#transaction-form').serialize();  
+        $('#loader').show();
+        $.ajax({     
+            type: 'POST',
+            url: "api/user_balance",
+            data: data,                                                                                  
+            error: function( xhr ){ 
+                alert(xhr.responseText);
+                console.log(xhr)
+                $('#loader').hide();
+            },
+            success: function( data ){ 
+                $('#loader').hide();
+                dttable.ajax.reload(null, true);
+                $('#transaction-modal').modal('hide');
+
+            }
+        });
+    }
+
+    function editData(obj){
+        var id = $(obj).data('id');
+        var url = $(obj).data('url');
+        const getApplicantById = _id => _data.find(({id}) => id === _id);
+        filtered = getApplicantById(id);
+        populate($('#edit-form'), filtered);
+        $('#edit-modal').modal('show');
+        $('#edit-form').data('url', "api/user_balance/"+id);
+    }
+
+    function populate(frm, data) {   
+        $.each(data, function(key, value) {  
+            var ctrl = $('[name='+key+']', frm);  
+            switch(ctrl.prop("type")) { 
+                case "radio": case "checkbox":   
+                    ctrl.each(function() {
+                        if($(this).attr('value') == value) $(this).attr("checked",value);
+                    });   
+                    break;  
+                default:
+                    ctrl.val(value); 
+            }  
+        });  
+    }
+
+    function updateData(){
+        var data = $('#edit-form').serialize();  
+        var url = $('#edit-form').data('url');  
+        $('#loader').show();
+
+        $.ajax({     
+            type: 'PATCH',
+            url: url,
+            data: data,                                                                                  
+            error: function( xhr ){ 
+                alert(xhr.responseText);
+                $('#loader').hide();
+            },
+            success: function( data ){ 
+                $('#loader').hide();
+                dttable.ajax.reload(null, true);
+                $('#edit-modal').modal('hide');
+            }
+        });
+    }
+
+    function deleteData(obj){
+        var id = $(obj).data('id');
+        var url = $(obj).data('url');
+        $('#loader').show();
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            $.ajax({     
+                type: 'DELETE',
+                url: url,
+                data: { "id": id },                                                                                  
+                error: function( xhr ){
+                    $('#loader').hide();
+                    alert(xhr.responseText);
+                },
+                success: function( data ){ 
+                    $('#loader').hide();
+                     dttable.ajax.reload(null, true);
+                }
+            });
+        else
+            return false; 
+        
+    }
+    function reload(){
+        dttable.ajax.reload(null, true);
+    }
+    $(document).ready( function(){ 
+        $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        dttable = $('#datatable').DataTable({
+            responsive: true,
+            "scrollY": "45vh",
+            "scrollCollapse": true,
+            "ajax": {
+                "url": "api/user_balance",
+                "dataSrc": function ( json ) {
+                    parsed_data = JSON.parse(json.data);
+                    for ( var i=0, ien = parsed_data.length ; i<ien ; i++ ) {
+                        var _id = parsed_data[i].id; 
+
+                        action = `
+                            <button class="btn btn-sm btn-warning" data-id="`+_id+`" data-url="/api/user_balance/`+_id+`" onclick="editData(this)">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-id="`+_id+`" data-url="/api/user_balance/`+_id+`" onclick="deleteData(this)">Delete</button>
+                        `;
+
+                        parsed_data[i].action = action;
+                        parsed_data[i].username = parsed_data[i].user.username;
+                        parsed_data[i].type = parsed_data[i].history.type;
+                        parsed_data[i].activity = parsed_data[i].history.activity;
+                        parsed_data[i].ip = parsed_data[i].history.ip;
+                        parsed_data[i].location = parsed_data[i].history.location;
+                        parsed_data[i].user_agent = parsed_data[i].history.user_agent;
+                        parsed_data[i].author = parsed_data[i].history.author;
+                        parsed_data[i].balance_before = parsed_data[i].history.balance_before;
+                        parsed_data[i].balance_after = parsed_data[i].history.balance_after;
+                    }
+                    _data = parsed_data;
+                    return parsed_data;
+                },
+            },
+            "columns": [
+                { "data": "transaction_date" },
+                { "data": "username" },
+                { "data": "type" },
+                { "data": "activity" },
+                { "data": "ip" },
+                { "data": "location" },
+                { "data": "user_agent" },
+                { "data": "author" },
+                { "data": "balance" },
+                { "data": "balance_achieve" },
+            ]
+        });
+    });
+</script>
+<% end %>
+<%= render template: "layouts/application" %>
