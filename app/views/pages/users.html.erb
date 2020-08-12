@@ -185,23 +185,26 @@
 		var url = $(obj).data('url');
 		$('#loader').show();
 		var x = confirm("Are you sure you want to delete?");
-		if (x)
-		    $.ajax({     
-		        type: 'DELETE',
-		        url: url,
-		        data: { "id": id },                                                                                  
-		        error: function( xhr ){
-		        	$('#loader').hide();
-		          	alert(xhr.responseText);
-		        },
-		        success: function( data ){ 
-		        	$('#loader').hide();
-		        	 dttable.ajax.reload(null, true);
-		        }
-		    });
-		else
-		  	return false; 
-		
+		if (x){
+
+			$.ajax({     
+			    type: 'DELETE',
+			    url: url,
+			    data: { "id": id },                                                                                  
+			    error: function( xhr ){
+			    	$('#loader').hide();
+			      	alert(xhr.responseText);
+			    },
+			    success: function( data ){ 
+			    	$('#loader').hide();
+			    	 dttable.ajax.reload(null, true);
+			    }
+			});
+
+		}else{
+			$('#loader').hide();
+		}
+		return false;
 	}
 
 	$(document).ready( function(){ 
