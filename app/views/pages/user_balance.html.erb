@@ -227,6 +227,7 @@
 			    "url": "api/user_balance",
 			    "dataSrc": function ( json ) {
 		        	parsed_data = JSON.parse(json.data);
+		        	console.log(parsed_data);
 		        	for ( var i=0, ien = parsed_data.length ; i<ien ; i++ ) {
 		        		var _id = parsed_data[i].id; 
 		        		_balance_achieve = json.balance_achieve;

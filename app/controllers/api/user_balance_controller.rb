@@ -35,9 +35,10 @@ class Api::UserBalanceController < ApplicationController
         lastbalance = UserBalance.where(:user_id => user_id ).order('created_at DESC').first
         highestbalance = UserBalance.where(:user_id => user_id ).order('balance_achieve DESC').first
 
-        balance = lastbalance ? ( activity == 'topup' ? params[:balance].to_f + lastbalance.balance.to_f : lastbalance.balance.to_f - params[:balance].to_f ) : params[:balance]
+        balance = lastbalance ? ( activity == 'topup' ? params[:balance].to_f + lastbalance.balance.to_f : lastbalance.balance.to_f - params[:balance].to_f ) : params[:balance].to_f 
         balance_achieve = highestbalance ? ( highestbalance.balance.to_f > balance.to_f ? highestbalance.balance.to_f : balance.to_f ) : params[:balance].to_f
 
+        # store user balance
         @storebalance = {
         	"user_id" => user_id,
         	"balance" => balance,
@@ -58,7 +59,39 @@ class Api::UserBalanceController < ApplicationController
         	"author" => author,
         }
         data = UserBalanceHistory.new(@storehistory)
-        # abort @storehistory.inspect
+        # abort @storehistory.inspect #inspect
+
+        # store bank balance
+		lastbankbalance = BalanceBank.order('created_at DESC').first
+        highestbankbalance = BalanceBank.order('balance_achieve DESC').first
+		lastbankhistory = BalanceBankHistory.order('created_at DESC').first
+
+		history_balance_before = ( lastbankhistory ? lastbankhistory.balance_after : 0 )
+
+        bank_balance = lastbankbalance ? ( activity == 'topup' ? params[:balance].to_f + lastbankbalance.balance.to_f : lastbankbalance.balance.to_f - params[:balance].to_f ) : params[:balance].to_f 
+        bank_balance_achieve = highestbankbalance ? ( highestbankbalance.balance.to_f > balance.to_f ? highestbankbalance.balance.to_f : balance.to_f ) : params[:balance].to_f
+
+        storebankbalance = {
+        	"code" => 'BCA',
+        	"balance" => bank_balance,
+        	"balance_achieve" => bank_balance_achieve,
+        }
+        newbankbalance = BalanceBank.new( storebankbalance )
+        newbankbalance.save
+
+        storebankhistory = {
+         	"balance_bank_id" => newbankbalance.id,
+         	"balance_before" => history_balance_before,
+         	"balance_after" => bank_balance,
+         	"activity" => params[:activity],
+         	"type" => params[:type],
+         	"ip" => remote_addr,
+        	"user_agent" => browser,
+        	"location" => request.location.city,
+        	"author" => author,
+        }
+        newbankhistory = BalanceBankHistory.new(storebankhistory).save
+        # end bank balance store
 
         if(data.save)
             render json:{status:'SUCCESS', message:'User Balance Saved', data:data, balance_achieve:balance_achieve}, status:200

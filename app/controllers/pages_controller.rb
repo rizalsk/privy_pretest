@@ -10,4 +10,7 @@ class PagesController < ApplicationController
 	def user_balance
 		render 'pages/user_balance'
 	end
+	def bank_balance
+		render 'pages/bank_balance'
+	end
 end
